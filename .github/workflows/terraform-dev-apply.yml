@@ -1,0 +1,175 @@
+name: Terraform Dev Apply
+
+
+on:
+
+  workflow_dispatch:
+
+
+
+permissions:
+
+  id-token: write
+  contents: read
+
+
+
+env:
+
+  AWS_REGION: us-east-1
+  TF_PLAN_BUCKET: ${{ vars.TF_PLAN_BUCKET }}
+
+
+
+jobs:
+
+
+  terraform-plan:
+
+
+    name: Terraform Plan
+
+    runs-on: ubuntu-latest
+
+
+    defaults:
+
+      run:
+
+        working-directory: terraform/environments/dev
+
+
+
+    steps:
+
+
+      - name: Checkout Repository
+
+        uses: actions/checkout@v4
+
+
+
+      - name: Configure AWS Credentials (OIDC)
+
+        uses: aws-actions/configure-aws-credentials@v4
+
+        with:
+
+          role-to-assume: arn:aws:iam::952969969207:role/github-actions-terraform-role
+
+          aws-region: ${{ env.AWS_REGION }}
+
+
+
+      - name: Verify AWS Identity
+
+        run: aws sts get-caller-identity
+
+
+
+      - name: Setup Terraform
+
+        uses: hashicorp/setup-terraform@v3
+
+
+
+      - name: Terraform Init
+
+        run: terraform init
+
+
+
+      - name: Terraform Plan
+
+        run: terraform plan -out=tfplan
+
+
+
+      - name: Upload Terraform Plan To S3
+
+        run: |
+
+          aws s3 cp tfplan \
+          s3://${{ env.TF_PLAN_BUCKET }}/dev/${{ github.sha }}.tfplan
+
+
+
+
+
+  terraform-apply:
+
+
+    name: Terraform Apply
+
+    needs: terraform-plan
+
+
+    runs-on: ubuntu-latest
+
+
+    environment:
+
+      name: dev
+
+
+
+    defaults:
+
+      run:
+
+        working-directory: terraform/environments/dev
+
+
+
+    steps:
+
+
+      - name: Checkout Repository
+
+        uses: actions/checkout@v4
+
+
+
+      - name: Configure AWS Credentials (OIDC)
+
+        uses: aws-actions/configure-aws-credentials@v4
+
+        with:
+
+          role-to-assume: arn:aws:iam::952969969207:role/github-actions-terraform-role
+
+          aws-region: ${{ env.AWS_REGION }}
+
+
+
+      - name: Verify AWS Identity
+
+        run: aws sts get-caller-identity
+
+
+
+      - name: Setup Terraform
+
+        uses: hashicorp/setup-terraform@v3
+
+
+
+      - name: Terraform Init
+
+        run: terraform init
+
+
+
+      - name: Download Terraform Plan From S3
+
+        run: |
+
+          aws s3 cp \
+          s3://${{ env.TF_PLAN_BUCKET }}/dev/${{ github.sha }}.tfplan \
+          tfplan
+
+
+
+      - name: Terraform Apply
+
+        run: terraform apply -input=false tfplan
