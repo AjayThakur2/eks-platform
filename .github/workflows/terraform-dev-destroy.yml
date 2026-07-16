@@ -1,0 +1,88 @@
+name: Terraform Dev Destroy
+
+
+on:
+
+  workflow_dispatch:
+
+
+permissions:
+
+  id-token: write
+  contents: read
+
+
+
+env:
+
+  AWS_REGION: us-east-1
+
+
+
+jobs:
+
+
+  terraform-destroy:
+
+
+    name: Terraform Destroy
+
+    runs-on: ubuntu-latest
+
+
+    environment:
+
+      name: dev
+
+
+
+    defaults:
+
+      run:
+
+        working-directory: terraform/environments/dev
+
+
+
+    steps:
+
+
+      - name: Checkout Repository
+
+        uses: actions/checkout@v4
+
+
+
+      - name: Configure AWS Credentials (OIDC)
+
+        uses: aws-actions/configure-aws-credentials@v4
+
+        with:
+
+          role-to-assume: arn:aws:iam::952969969207:role/github-actions-terraform-role
+
+          aws-region: ${{ env.AWS_REGION }}
+
+
+
+      - name: Verify AWS Identity
+
+        run: aws sts get-caller-identity
+
+
+
+      - name: Setup Terraform
+
+        uses: hashicorp/setup-terraform@v3
+
+
+
+      - name: Terraform Init
+
+        run: terraform init
+
+
+
+      - name: Terraform Destroy
+
+        run: terraform destroy -auto-approve
