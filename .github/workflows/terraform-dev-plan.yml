@@ -3,15 +3,16 @@ name: Terraform Dev Plan
 
 on:
 
-  push:
+  pull_request:
     branches:
-      - "feature/**"
+      - main
 
 
 permissions:
 
   id-token: write
   contents: read
+  pull-requests: write
 
 
 jobs:
@@ -57,7 +58,8 @@ jobs:
 
 
       - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+        working-directory: .
+        run: terraform fmt -check -recursive terraform
 
 
 
@@ -72,11 +74,17 @@ jobs:
 
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-
-
-      - name: Upload Terraform Plan to S3
+        id: terraform-plan
         run: |
-          aws s3 cp tfplan \
-          s3://eks-platform-dev-tf-plan-artifacts-952969969207/dev/${{ github.sha }}.tfplan
+          terraform plan -no-color | tee terraform-plan.txt
+
+
+
+      - name: Add Terraform Plan Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+
+        with:
+
+          header: terraform-dev-plan
+
+          path: terraform/environments/dev/terraform-plan.txt
