@@ -7,7 +7,7 @@ Designed and built an enterprise-inspired AWS EKS platform using Infrastructure 
 Key highlights:
 
 Built a modular Terraform architecture for AWS infrastructure, including VPC, IAM, KMS, EKS Cluster, and Managed Node Groups.
-Implemented remote Terraform state using Amazon S3 with DynamoDB state locking.
+Implemented remote Terraform state using Amazon S3 with native state locking.
 Designed an enterprise-style GitHub Actions CI/CD workflow with:
 Automated Terraform validation and planning
 Plan artifact storage
@@ -20,4 +20,4 @@ Designed the platform with private worker nodes, high availability across multip
 Focused on production-oriented DevOps practices including infrastructure automation, security, and change management.
 
 Technologies
-AWS • Amazon EKS • Terraform • GitHub Actions • IAM • VPC • KMS • S3 • DynamoDB • OIDC • Git • Linux • Kubernetes
+AWS • Amazon EKS • Terraform • GitHub Actions • IAM • VPC • KMS • S3 • OIDC • Git • Linux • Kubernetes
