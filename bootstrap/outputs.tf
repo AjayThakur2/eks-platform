@@ -10,7 +10,4 @@ output "terraform_plan_artifact_bucket" {
 }
 
 
-output "terraform_lock_table" {
-  description = "Terraform state lock DynamoDB table"
-  value       = aws_dynamodb_table.terraform_lock.name
-}
+
