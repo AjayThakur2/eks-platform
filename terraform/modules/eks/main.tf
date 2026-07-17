@@ -8,6 +8,14 @@ resource "aws_eks_cluster" "this" {
   role_arn = var.cluster_role_arn
 
 
+  access_config {
+
+    authentication_mode = "API_AND_CONFIG_MAP"
+
+    bootstrap_cluster_creator_admin_permissions = true
+
+  }
+
   vpc_config {
 
     subnet_ids = var.private_subnet_ids
@@ -44,29 +52,4 @@ resource "aws_eks_cluster" "this" {
   }
 
 }
-# OIDC Provider for IRSA
-#
 
-data "tls_certificate" "eks" {
-
-  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
-
-}
-
-
-
-resource "aws_iam_openid_connect_provider" "this" {
-
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-
-
-  thumbprint_list = [
-    data.tls_certificate.eks.certificates[0].sha1_fingerprint
-  ]
-
-
-  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
-
-}

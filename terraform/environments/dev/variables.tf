@@ -31,3 +31,10 @@ variable "private_subnet_cidrs" {
   description = "Private subnet CIDR ranges"
   type        = list(string)
 }
+variable "eks_admin_principal_arns" {
+
+  description = "IAM principals allowed to administer EKS cluster"
+
+  type = list(string)
+
+}

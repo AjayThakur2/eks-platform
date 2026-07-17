@@ -57,6 +57,8 @@ module "eks" {
 
 
   environment = "dev"
+
+  eks_admin_principal_arns = var.eks_admin_principal_arns
 }
 # KMS Module Added
 module "kms" {
