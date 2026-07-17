@@ -27,3 +27,6 @@ private_subnet_cidrs = [
   "10.0.12.0/24",
   "10.0.13.0/24"
 ]
+eks_admin_principal_arns = [
+  "arn:aws:iam::952969969207:user/InfraSA"
+]

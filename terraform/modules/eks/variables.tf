@@ -40,3 +40,13 @@ variable "environment" {
   type = string
 
 }
+
+variable "eks_admin_principal_arns" {
+
+  description = "IAM principals with EKS admin access"
+
+  type = list(string)
+
+  default = []
+
+}
