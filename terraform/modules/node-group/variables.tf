@@ -67,3 +67,41 @@ variable "environment" {
   type = string
 
 }
+
+variable "kms_key_arn" {
+
+  type = string
+
+}
+
+variable "capacity_type" {
+
+  description = "Capacity type for the managed node group"
+
+  type = string
+
+  default = "ON_DEMAND"
+
+}
+
+variable "disk_size" {
+
+  description = "Root EBS volume size in GiB"
+
+  type = number
+
+  default = 20
+
+}
+
+variable "volume_type" {
+
+  description = "Root EBS volume type"
+
+  type = string
+
+  default = "gp3"
+
+}
+
+

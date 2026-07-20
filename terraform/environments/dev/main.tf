@@ -53,7 +53,7 @@ module "eks" {
   private_subnet_ids = module.vpc.private_subnet_ids
 
 
-  kms_key_arn = module.kms.kms_key_arn
+  kms_key_arn = module.kms.eks_secrets_kms_key_arn
 
 
   environment = "dev"
@@ -92,4 +92,5 @@ module "node_group" {
 
   environment = var.environment
 
+  kms_key_arn = module.kms.ebs_kms_key_arn
 }
