@@ -64,13 +64,13 @@ resource "aws_eks_node_group" "this" {
 
   capacity_type = var.capacity_type
 
-launch_template {
+  launch_template {
 
-  id = aws_launch_template.this.id
+    id = aws_launch_template.this.id
 
-  version = aws_launch_template.this.latest_version
+    version = aws_launch_template.this.latest_version
 
-}
+  }
 
 
   instance_types = [
